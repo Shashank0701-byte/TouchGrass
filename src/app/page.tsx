@@ -2,6 +2,7 @@ import Link from "next/link";
 import { QuestShelf } from "@/components/quest-shelf";
 import { NetworkStatus } from "@/components/network-status";
 import { LeafMark } from "@/components/leaf-mark";
+import { ProgressBoard } from "@/components/progress-board";
 
 export default function Home() {
   return (
@@ -31,6 +32,7 @@ export default function Home() {
         <div className="hero-note"><span aria-hidden="true">✳</span> No feed. No cloud account. Just you and the outside.</div>
       </section>
 
+      <ProgressBoard />
       <QuestShelf />
 
       <section className="promise-strip" aria-label="How TouchGrass works">

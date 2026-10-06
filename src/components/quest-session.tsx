@@ -3,9 +3,10 @@
 import { liveQuery } from "dexie";
 import { useEffect, useState } from "react";
 import { db } from "@/lib/db";
-import type { Quest } from "@/types/quest";
+import type { Quest, QuestResult, UserStats } from "@/types/quest";
 import { NetworkStatus } from "@/components/network-status";
 import { LeafMark } from "@/components/leaf-mark";
+import { questXp, toggleQuestTask } from "@/lib/gamification";
 
 function formatTime(seconds: number) {
   const minutes = Math.floor(seconds / 60).toString().padStart(2, "0");
@@ -15,13 +16,25 @@ function formatTime(seconds: number) {
 
 export function QuestSession({ questId, onClose }: { questId: string; onClose: () => void }) {
   const [quest, setQuest] = useState<Quest | null>(null);
+  const [result, setResult] = useState<QuestResult | null>(null);
+  const [stats, setStats] = useState<UserStats | undefined>();
   const [now, setNow] = useState(Date.now());
   const [error, setError] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    const subscription = liveQuery(() => db.quests.get(questId)).subscribe({
-      next: (item) => { setQuest(item ?? null); setError(false); },
+    const subscription = liveQuery(async () => {
+      const [item, savedResult, userStats] = await Promise.all([
+        db.quests.get(questId), db.results.get(questId), db.stats.get("user"),
+      ]);
+      return { item, savedResult, userStats };
+    }).subscribe({
+      next: ({ item, savedResult, userStats }) => {
+        setQuest(item ?? null);
+        setResult(savedResult ?? null);
+        setStats(userStats);
+        setError(false);
+      },
       error: () => setError(true),
     });
     return () => subscription.unsubscribe();
@@ -46,27 +59,7 @@ export function QuestSession({ questId, onClose }: { questId: string; onClose: (
     if (!quest || quest.status !== "active" || saving) return;
     setSaving(true);
     try {
-      await db.transaction("rw", db.quests, db.results, async () => {
-        const latest = await db.quests.get(questId);
-        if (!latest || latest.status !== "active") return;
-        const tasks = latest.tasks.map((task) => task.id === taskId ? { ...task, completed: !task.completed } : task);
-        if (tasks.every((task) => task.completed)) {
-          const completedAt = Date.now();
-          const durationSeconds = Math.max(0, Math.floor((completedAt - (latest.startedAt ?? completedAt)) / 1000));
-          const completed: Quest = { ...latest, tasks, status: "completed", completedAt, durationSeconds };
-          await db.quests.put(completed);
-          await db.results.put({
-            id: latest.id,
-            questId: latest.id,
-            completedAt,
-            durationSeconds,
-            xpEarned: 0,
-            completedTasks: tasks.length,
-          });
-        } else {
-          await db.quests.update(questId, { tasks });
-        }
-      });
+      await toggleQuestTask(questId, taskId);
     } catch { setError(true); }
     finally { setSaving(false); }
   }
@@ -104,7 +97,13 @@ export function QuestSession({ questId, onClose }: { questId: string; onClose: (
                 <div aria-valuemax={quest.tasks.length} aria-valuemin={0} aria-valuenow={completedCount} className="session-progress-track" role="progressbar">
                   <span style={{ width: `${quest.tasks.length ? completedCount / quest.tasks.length * 100 : 0}%` }} />
                 </div>
-                {quest.status === "completed" && <p className="session-finish">You completed all {quest.tasks.length} steps. Your result is saved on this device.</p>}
+                {quest.status === "completed" && (
+                  <div className="session-finish">
+                    <strong>+{result?.xpEarned ?? questXp(quest.difficulty)} GRASS XP</strong>
+                    <span>{result?.streakDays ?? stats?.currentStreak ?? 1} DAY STREAK · SAVED ON THIS DEVICE</span>
+                    <p>You completed all {quest.tasks.length} steps. Your time outside is part of your local history.</p>
+                  </div>
+                )}
                 <ol className="session-tasks">
                   {quest.tasks.map((task, index) => (
                     <li key={task.id}>

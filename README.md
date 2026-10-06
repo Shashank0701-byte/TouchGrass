@@ -4,7 +4,7 @@ TouchGrass is an offline-first outdoor quest companion. Prepare a short quest wi
 
 ## Current build phase
 
-**Phase 4 - offline system:** the Home app shell and its required JavaScript and CSS are cached on the first online visit. Saved quests stay in IndexedDB, and the Home shelf, task progress, and timer remain available offline. A connection indicator updates as the browser reports online or offline. Quest generation still needs the local Ollama service.
+**Phase 5 - gamification:** quests award 50/100/150 Grass XP for easy/medium/hard completion. A local daily streak tracks consecutive calendar days, while Home shows total XP, current and longest streak, outdoor time, and recent quest history. Rewards and history are stored in IndexedDB; earlier Phase 3 completions are awarded once when the app opens.
 
 ## Run locally
 

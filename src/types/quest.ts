@@ -31,6 +31,7 @@ export type QuestResult = {
   durationSeconds: number;
   xpEarned: number;
   completedTasks: number;
+  streakDays?: number;
 };
 
 export type UserStats = {

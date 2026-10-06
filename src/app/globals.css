@@ -320,6 +320,27 @@ h1 em { color: var(--forest); font-weight: 400; }
   font-size: 8px;
 }
 
+.progress-board { width: 100%; max-width: 920px; margin: 0 auto 18px; padding: 24px 26px 20px; border: 1px solid rgba(35, 31, 32, .13); background: rgba(255, 255, 255, .44); }
+.progress-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 19px; }
+.progress-heading h2 { margin: 0; font: 400 clamp(24px, 3vw, 31px)/1.15 Georgia, "Times New Roman", serif; letter-spacing: -.04em; }
+.progress-heading h2 span { color: var(--forest); }
+.progress-total, .history-heading > span { color: var(--muted); font-size: 8px; font-weight: 700; letter-spacing: .12em; }
+.progress-stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.progress-stat { display: grid; gap: 5px; padding: 17px 10px 15px 0; }
+.progress-stat + .progress-stat { padding-left: 16px; border-left: 1px solid var(--line); }
+.progress-stat strong { color: var(--forest-deep); font: 400 clamp(23px, 3.5vw, 34px)/1 Georgia, "Times New Roman", serif; font-variant-numeric: tabular-nums; }
+.progress-stat strong small { font: 400 12px Arial, sans-serif; }
+.progress-stat > span { color: var(--muted); font-size: 7px; font-weight: 700; letter-spacing: .11em; }
+.history-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 17px 0 7px; }
+.history-heading h3 { margin: 0; color: var(--ink); font: 400 18px Georgia, "Times New Roman", serif; }
+.history-empty { margin: 0; padding: 10px 0 2px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.history-list { margin: 0; padding: 0; list-style: none; }
+.history-list li { display: grid; grid-template-columns: 58px minmax(0, 1fr) 62px 48px; align-items: center; gap: 12px; padding: 11px 0; border-top: 1px solid rgba(35, 31, 32, .09); font-size: 10px; }
+.history-date, .history-duration { color: var(--muted); font-size: 8px; font-weight: 700; letter-spacing: .06em; }
+.history-title { overflow: hidden; color: #55544d; text-overflow: ellipsis; white-space: nowrap; }
+.history-reward { color: var(--forest); font-weight: 700; text-align: right; white-space: nowrap; }
+.history-duration { text-align: right; }
+
 .quest-shelf {
   width: 100%;
   max-width: 920px;
@@ -382,7 +403,10 @@ h1 em { color: var(--forest); font-weight: 400; }
 .session-task-done > span:nth-child(2) { color: #89877d; text-decoration: line-through; text-decoration-color: rgba(61, 95, 88, .55); }
 .session-check { color: var(--forest); font-size: 20px; text-align: center; }
 .session-hint, .session-finish { margin-top: 20px; color: var(--muted); font-size: 12px; line-height: 1.7; }
-.session-finish { padding: 15px 18px; border-left: 2px solid var(--forest); background: rgba(61, 95, 88, .06); color: var(--forest); }
+.session-finish { display: grid; gap: 7px; padding: 15px 18px; border-left: 2px solid var(--forest); background: rgba(61, 95, 88, .06); color: var(--forest); font-size: 10px; font-weight: 700; letter-spacing: .1em; }
+.session-finish strong { font: 400 25px Georgia, "Times New Roman", serif; letter-spacing: 0; }
+.session-finish span { font-size: 8px; letter-spacing: .12em; }
+.session-finish p { margin: 2px 0 0; color: var(--muted); font-size: 11px; font-weight: 400; letter-spacing: 0; line-height: 1.6; }
 .session-intro { max-width: 540px; margin-top: 30px; }
 .session-primary { display: flex; width: 100%; align-items: center; justify-content: space-between; margin-top: 28px; padding: 20px 23px; border: 0; background: var(--forest-deep); color: var(--paper); cursor: pointer; font: 700 14px Arial, sans-serif; }
 .session-primary span { font-size: 20px; }
@@ -395,6 +419,12 @@ h1 em { color: var(--forest); font-weight: 400; }
   .build-label { font-size: 8px; letter-spacing: 0.1em; }
   .network-status { max-width: 170px; font-size: 7px; letter-spacing: .08em; }
   .session-header-actions { align-items: end; flex-direction: column; gap: 7px; }
+  .progress-board { padding: 20px 16px 16px; }
+  .progress-stats { grid-template-columns: repeat(2, 1fr); }
+  .progress-stat:nth-child(3) { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); }
+  .progress-stat:nth-child(4) { border-top: 1px solid var(--line); }
+  .history-list li { grid-template-columns: 43px minmax(0, 1fr) 50px; gap: 8px; }
+  .history-duration { display: none; }
   .hero { padding: 74px 0 82px; }
   .eyebrow { gap: 8px; font-size: 8px; letter-spacing: 0.11em; }
   .eyebrow-line { width: 16px; }
