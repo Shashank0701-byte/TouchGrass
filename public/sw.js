@@ -1,6 +1,6 @@
 /* Keep this shell worker small. Quest data belongs in IndexedDB, never Cache Storage. */
-const SHELL_CACHE = "touchgrass-shell-v1";
-const ASSET_CACHE = "touchgrass-assets-v1";
+const SHELL_CACHE = "touchgrass-shell-v2";
+const ASSET_CACHE = "touchgrass-assets-v2";
 const NEXT_STATIC = "/_next/static/";
 
 self.addEventListener("install", (event) => {
@@ -34,7 +34,7 @@ self.addEventListener("install", (event) => {
       // A failed pre-cache leaves the standalone offline page available.
     }
 
-    await self.skipWaiting();
+    // Wait for old pages to close before switching their shell and code bundle.
   })());
 });
 
@@ -60,15 +60,21 @@ self.addEventListener("fetch", (event) => {
         const response = await fetch(request);
         if (response.ok) {
           const shell = await caches.open(SHELL_CACHE);
-          await shell.put(url.pathname === "/" ? "/" : request, response.clone());
+          // Home is the supported offline shell. Do not persist arbitrary route
+          // HTML or query-specific responses in Cache Storage.
+          if (url.pathname === "/") await shell.put("/", response.clone());
         }
         return response;
       } catch {
         const shell = await caches.open(SHELL_CACHE);
-        return (await shell.match(request))
-          || (await shell.match(url.pathname))
-          || (await shell.match("/"))
-          || (await shell.match("/offline.html"));
+        if (url.pathname === "/") {
+          const home = await shell.match("/");
+          if (home) return home;
+        }
+        return (await shell.match("/offline.html")) || new Response(
+          "<!doctype html><title>TouchGrass offline</title><p>You are offline. Open Home after connecting once to prepare this device.</p>",
+          { status: 503, headers: { "Content-Type": "text/html; charset=utf-8" } },
+        );
       }
     })());
     return;

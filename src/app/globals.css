@@ -84,7 +84,6 @@ a { color: inherit; text-decoration: none; }
 
 .brand-ai { color: var(--forest); font-weight: 500; }
 .leaf-mark { width: 31px; height: 31px; }
-.create-leaf { display: inline-grid; width: 31px; height: 31px; place-items: center; color: var(--forest); font-size: 28px; }
 .back-link { color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .14em; }
 .back-link:hover, .text-link:hover { color: var(--forest); }
 .create-hero { padding-top: 70px; }
@@ -225,6 +224,10 @@ a { color: inherit; text-decoration: none; }
 }
 
 .build-label { display: flex; align-items: center; gap: 9px; color: var(--muted); }
+.network-status { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .12em; }
+.network-status .status-dot { flex: 0 0 auto; }
+.network-status-offline { color: #8a6320; }
+.network-status-offline .status-dot { background: #c49120; }
 .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--forest); }
 
 .hero {
@@ -362,6 +365,8 @@ h1 em { color: var(--forest); font-weight: 400; }
 .session-header { display: flex; align-items: center; justify-content: space-between; padding: 22px 0; border-bottom: 1px solid var(--line); }
 .session-header .brand { color: var(--forest); text-decoration: none; }
 .session-header .brand span { color: var(--ink); }
+.session-header .brand .brand-ai { color: var(--forest); }
+.session-header-actions { display: flex; align-items: center; gap: clamp(15px, 3vw, 32px); }
 .session-close { border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 9px; font-weight: 700; letter-spacing: .14em; }
 .session-close:focus-visible, .session-task:focus-visible, .session-primary:focus-visible { outline: 3px solid var(--ochre); outline-offset: 3px; }
 .session-content { width: min(100%, 780px); margin: clamp(50px, 10vh, 110px) auto 0; }
@@ -388,6 +393,8 @@ h1 em { color: var(--forest); font-weight: 400; }
   .landing-shell { padding: 0 22px; }
   .topbar { padding: 21px 0; }
   .build-label { font-size: 8px; letter-spacing: 0.1em; }
+  .network-status { max-width: 170px; font-size: 7px; letter-spacing: .08em; }
+  .session-header-actions { align-items: end; flex-direction: column; gap: 7px; }
   .hero { padding: 74px 0 82px; }
   .eyebrow { gap: 8px; font-size: 8px; letter-spacing: 0.11em; }
   .eyebrow-line { width: 16px; }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
 import { db } from "@/lib/db";
+import { LeafMark } from "@/components/leaf-mark";
 import {
   makeFallbackQuest,
   prepareQuestForSaving,
@@ -176,7 +177,7 @@ export function QuestBuilder() {
     <main className="builder-shell">
       <header className="topbar">
         <Link className="brand" href="/" aria-label="TouchGrass AI home">
-          <span aria-hidden="true" className="create-leaf">✳</span>
+          <LeafMark />
           <span>touchgrass<span className="brand-ai">.ai</span></span>
         </Link>
         <Link className="back-link" href="/">BACK HOME <span aria-hidden="true">↗</span></Link>

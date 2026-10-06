@@ -4,6 +4,8 @@ import { liveQuery } from "dexie";
 import { useEffect, useState } from "react";
 import { db } from "@/lib/db";
 import type { Quest } from "@/types/quest";
+import { NetworkStatus } from "@/components/network-status";
+import { LeafMark } from "@/components/leaf-mark";
 
 function formatTime(seconds: number) {
   const minutes = Math.floor(seconds / 60).toString().padStart(2, "0");
@@ -78,8 +80,8 @@ export function QuestSession({ questId, onClose }: { questId: string; onClose: (
     <div className="quest-session-backdrop">
       <section aria-labelledby="session-title" aria-modal="true" className="quest-session" role="dialog">
         <header className="session-header">
-          <a className="brand" href="/" onClick={(event) => { event.preventDefault(); onClose(); }}>✳ <span>touchgrass.ai</span></a>
-          <button className="session-close" onClick={onClose} type="button">BACK HOME ↗</button>
+          <a className="brand" href="/" onClick={(event) => { event.preventDefault(); onClose(); }}><LeafMark /><span>touchgrass<span className="brand-ai">.ai</span></span></a>
+          <div className="session-header-actions"><NetworkStatus /><button className="session-close" onClick={onClose} type="button">BACK HOME ↗</button></div>
         </header>
         {error ? <p className="session-message" role="alert">This quest could not be opened or saved on this device.</p> : !quest ? (
           <p aria-live="polite" className="session-message">Opening your quest…</p>
