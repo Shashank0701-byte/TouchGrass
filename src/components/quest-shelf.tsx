@@ -4,6 +4,7 @@ import { liveQuery } from "dexie";
 import { useEffect, useState } from "react";
 import { db } from "@/lib/db";
 import type { Quest } from "@/types/quest";
+import { QuestSession } from "@/components/quest-session";
 
 const activityNames: Record<Quest["activity"], string> = {
   walking: "Walk",
@@ -24,6 +25,7 @@ export function QuestShelf() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [storageError, setStorageError] = useState(false);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   useEffect(() => {
     const subscription = liveQuery(() =>
@@ -118,13 +120,13 @@ export function QuestShelf() {
                       >
                         {updatingId === quest.id ? "Preparing…" : "Mark ready for offline"}
                       </button>
+                    ) : quest.status === "prepared" || quest.status === "active" ? (
+                      <button className="shelf-ready-button" onClick={() => setSessionId(quest.id)} type="button">
+                        {quest.status === "active" ? "Resume quest" : "Start quest"}
+                      </button>
                     ) : (
                       <p className="shelf-ready-note">
-                        {quest.status === "prepared"
-                          ? "This plan is saved on this device and ready to take outside."
-                          : quest.status === "active"
-                            ? "Your quest is in progress."
-                            : "This quest is in your local history."}
+                        Completed in {Math.floor((quest.durationSeconds ?? 0) / 60)} min. This quest is in your local history.
                       </p>
                     )}
                   </div>
@@ -134,6 +136,7 @@ export function QuestShelf() {
           })}
         </div>
       )}
+      {sessionId && <QuestSession questId={sessionId} onClose={() => setSessionId(null)} />}
     </section>
   );
 }

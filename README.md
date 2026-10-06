@@ -4,7 +4,7 @@ TouchGrass is an offline-first outdoor quest companion. Prepare a short quest wi
 
 ## Current build phase
 
-**Phase 2 — quest generation:** choose a duration, activity, and difficulty; ask a local Ollama model for a structured quest; review the tasks; and keep it in IndexedDB. New quests are retained as local drafts immediately, appear on Home, and can be marked ready for offline. A safe on-device fallback is available if Ollama cannot generate a valid quest. Quest progress and the timer arrive in the next phase.
+**Phase 3 - quest experience:** generate with local Ollama or use the on-device fallback, then keep each quest in IndexedDB. Start or resume a ready quest from Home, check off tasks, and track elapsed time. Task progress and completion results are saved locally as you go, and the timer survives reloads. XP and streak rewards arrive in the next phase.
 
 ## Run locally
 
@@ -29,7 +29,7 @@ Open [http://localhost:3000](http://localhost:3000). The app server must run on 
 
 - Prepared quests, results, stats, and photo evidence are stored in IndexedDB through Dexie.
 - The service worker caches the app shell, its built assets, and a small offline fallback. It does not store quest records or photos in Cache Storage.
-- The prepared quest can be made without a model through the on-device fallback. The complete offline quest experience is still being built.
+- The prepared quest and an active session can be used offline after the app shell has loaded on this device.
 - No account or cloud database is part of the MVP.
 
 ## Stack

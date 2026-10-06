@@ -19,6 +19,9 @@ export type Quest = {
   tasks: QuestTask[];
   createdAt: number;
   status: "draft" | "prepared" | "active" | "completed";
+  startedAt?: number;
+  completedAt?: number;
+  durationSeconds?: number;
 };
 
 export type QuestResult = {

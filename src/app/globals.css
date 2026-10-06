@@ -357,6 +357,33 @@ h1 em { color: var(--forest); font-weight: 400; }
 .shelf-ready-button:disabled { cursor: wait; opacity: .7; }
 .shelf-ready-note { margin: 2px 0 0; color: var(--forest); font-size: 10px; line-height: 1.5; }
 
+.quest-session-backdrop { position: fixed; z-index: 20; inset: 0; overflow-y: auto; background: var(--paper); }
+.quest-session { min-height: 100%; padding: 0 clamp(22px, 6vw, 80px) 64px; }
+.session-header { display: flex; align-items: center; justify-content: space-between; padding: 22px 0; border-bottom: 1px solid var(--line); }
+.session-header .brand { color: var(--forest); text-decoration: none; }
+.session-header .brand span { color: var(--ink); }
+.session-close { border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 9px; font-weight: 700; letter-spacing: .14em; }
+.session-close:focus-visible, .session-task:focus-visible, .session-primary:focus-visible { outline: 3px solid var(--ochre); outline-offset: 3px; }
+.session-content { width: min(100%, 780px); margin: clamp(50px, 10vh, 110px) auto 0; }
+.session-content h1 { max-width: 700px; margin: 14px 0 10px; color: var(--ink); font: 400 clamp(42px, 8vw, 82px)/.98 Georgia, "Times New Roman", serif; letter-spacing: -.055em; }
+.session-subtitle, .session-intro > p { color: var(--muted); font-size: 14px; line-height: 1.7; }
+.session-progress { display: flex; align-items: center; justify-content: space-between; margin-top: 40px; padding: 17px 0; border-top: 1px solid var(--line); color: var(--forest); font-size: 10px; font-weight: 700; letter-spacing: .13em; }
+.session-timer { color: var(--ink); font: 400 25px Georgia, serif; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.session-progress-track { height: 3px; background: rgba(35, 31, 32, .1); }
+.session-progress-track span { display: block; height: 100%; background: var(--forest); transition: width .2s ease; }
+.session-tasks { display: grid; margin: 13px 0 0; padding: 0; list-style: none; }
+.session-task { display: grid; width: 100%; grid-template-columns: 34px 1fr 24px; align-items: center; gap: 12px; padding: 19px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; color: #55544d; cursor: pointer; text-align: left; font: inherit; font-size: 14px; line-height: 1.6; }
+.session-task[disabled] { cursor: default; }
+.session-task-done > span:nth-child(2) { color: #89877d; text-decoration: line-through; text-decoration-color: rgba(61, 95, 88, .55); }
+.session-check { color: var(--forest); font-size: 20px; text-align: center; }
+.session-hint, .session-finish { margin-top: 20px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+.session-finish { padding: 15px 18px; border-left: 2px solid var(--forest); background: rgba(61, 95, 88, .06); color: var(--forest); }
+.session-intro { max-width: 540px; margin-top: 30px; }
+.session-primary { display: flex; width: 100%; align-items: center; justify-content: space-between; margin-top: 28px; padding: 20px 23px; border: 0; background: var(--forest-deep); color: var(--paper); cursor: pointer; font: 700 14px Arial, sans-serif; }
+.session-primary span { font-size: 20px; }
+.session-message { width: min(100%, 700px); margin: 100px auto; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .session-progress-track span { transition: none; } }
+
 @media (max-width: 680px) {
   .landing-shell { padding: 0 22px; }
   .topbar { padding: 21px 0; }
