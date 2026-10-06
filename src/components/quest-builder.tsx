@@ -41,6 +41,7 @@ export function QuestBuilder() {
   });
   const [quest, setQuest] = useState<QuestDraft | null>(null);
   const [source, setSource] = useState<QuestGenerationSource | null>(null);
+  const [questId, setQuestId] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -54,21 +55,40 @@ export function QuestBuilder() {
     setIsGenerating(false);
     setSettings((current) => ({ ...current, ...update }));
     setQuest(null);
+    setQuestId(null);
     setSource(null);
     setNotice("");
     setSaved(false);
     setSaveError("");
   }
 
+  async function storeDraft(draft: QuestDraft) {
+    setIsSaving(true);
+    setSaveError("");
+    try {
+      const record = prepareQuestForSaving(draft, "draft");
+      await db.quests.add(record);
+      setQuestId(record.id);
+    } catch {
+      setQuestId(null);
+      setSaveError("This quest is only a preview because this device could not store it yet.");
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
   function useFallback() {
     generationController.current?.abort();
     generationController.current = null;
     setIsGenerating(false);
-    setQuest(makeFallbackQuest(settings));
+    const draft = makeFallbackQuest(settings);
+    setQuest(draft);
+    setQuestId(null);
     setSource("fallback");
-    setNotice("A ready-to-go quest was made directly on this device.");
+    setNotice("This ready-made quest is saved as a draft on this device. You can find it on the home screen.");
     setSaved(false);
     setSaveError("");
+    void storeDraft(draft);
   }
 
   async function generate(event: FormEvent<HTMLFormElement>) {
@@ -78,33 +98,47 @@ export function QuestBuilder() {
     generationController.current = controller;
     setIsGenerating(true);
     setQuest(null);
+    setQuestId(null);
     setSource(null);
     setNotice("");
     setSaved(false);
     setSaveError("");
 
     try {
-      const response = await fetch("/api/quests", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(settings),
-        signal: controller.signal,
-      });
-      const payload = await response.json() as GenerationResponse;
-      if (!response.ok) {
-        throw new Error(typeof payload.error === "string" ? payload.error : "Quest generation could not start.");
+      let draft: QuestDraft;
+      let draftSource: QuestGenerationSource;
+      let draftNotice: string;
+
+      try {
+        const response = await fetch("/api/quests", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(settings),
+          signal: controller.signal,
+        });
+        const payload = await response.json() as GenerationResponse;
+        if (!response.ok) {
+          throw new Error(typeof payload.error === "string" ? payload.error : "Quest generation could not start.");
+        }
+
+        const validated = validateQuestDraft(payload.quest, settings);
+        if (!validated) throw new Error("The generated quest did not match your choices.");
+        draft = validated;
+        draftSource = payload.source === "ollama" ? "ollama" : "fallback";
+        draftNotice = typeof payload.notice === "string" ? payload.notice : "";
+      } catch {
+        if (controller.signal.aborted) return;
+        draft = makeFallbackQuest(settings);
+        draftSource = "fallback";
+        draftNotice = "The local model could not make a safe quest, so a ready-made one is here.";
       }
 
-      const validated = validateQuestDraft(payload.quest, settings);
-      if (!validated) throw new Error("The generated quest did not match your choices.");
-      setQuest(validated);
-      setSource(payload.source === "ollama" ? "ollama" : "fallback");
-      setNotice(typeof payload.notice === "string" ? payload.notice : "");
-    } catch {
       if (controller.signal.aborted) return;
-      setQuest(makeFallbackQuest(settings));
-      setSource("fallback");
-      setNotice("The local model could not be reached, so this safe quest was made on your device.");
+      setQuest(draft);
+      setSource(draftSource);
+      setNotice([draftNotice, "Saved as a draft on this device. You can find it on the home screen."].filter(Boolean).join(" "));
+      setIsGenerating(false);
+      await storeDraft(draft);
     } finally {
       if (generationController.current === controller) {
         generationController.current = null;
@@ -118,7 +152,18 @@ export function QuestBuilder() {
     setIsSaving(true);
     setSaveError("");
     try {
-      await db.quests.add(prepareQuestForSaving(quest));
+      if (questId) {
+        const updated = await db.quests.update(questId, { status: "prepared" });
+        if (!updated) {
+          const record = prepareQuestForSaving(quest, "prepared");
+          await db.quests.add(record);
+          setQuestId(record.id);
+        }
+      } else {
+        const record = prepareQuestForSaving(quest, "prepared");
+        await db.quests.add(record);
+        setQuestId(record.id);
+      }
       setSaved(true);
     } catch {
       setSaveError("This device could not save the quest. Check available browser storage and try again.");
@@ -237,11 +282,11 @@ export function QuestBuilder() {
             {saved ? (
               <div className="saved-banner" role="status">
                 <span aria-hidden="true">✓</span>
-                <div><strong>Saved on this device.</strong><br />Your offline-ready quest is tucked away here.</div>
+                <div><strong>Ready for offline on this device.</strong><br />You can reopen it from the home screen.</div>
               </div>
             ) : (
               <button className="save-button" disabled={isSaving} onClick={saveQuest} type="button">
-                <span>{isSaving ? "Saving to this device…" : "Save quest to this device"}</span>
+                <span>{isSaving ? "Saving to this device…" : "Mark ready for offline"}</span>
                 <span aria-hidden="true">↓</span>
               </button>
             )}

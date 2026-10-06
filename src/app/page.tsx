@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { QuestShelf } from "@/components/quest-shelf";
 
 function LeafMark() {
   return (
@@ -50,6 +51,8 @@ export default function Home() {
         </Link>
         <div className="hero-note"><span aria-hidden="true">✳</span> No feed. No cloud account. Just you and the outside.</div>
       </section>
+
+      <QuestShelf />
 
       <section className="promise-strip" aria-label="How TouchGrass works">
         <div className="promise-heading">THE PLAN IS SIMPLE</div>

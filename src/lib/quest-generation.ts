@@ -108,12 +108,15 @@ export function makeFallbackQuest(settings: QuestSettings): QuestDraft {
   };
 }
 
-export function prepareQuestForSaving(draft: QuestDraft): Quest {
+export function prepareQuestForSaving(
+  draft: QuestDraft,
+  status: Quest["status"] = "prepared",
+): Quest {
   return {
     ...draft,
     id: crypto.randomUUID(),
     createdAt: Date.now(),
-    status: "prepared",
+    status,
     tasks: draft.tasks.map((task) => ({
       ...task,
       id: crypto.randomUUID(),
