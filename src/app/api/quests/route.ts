@@ -37,6 +37,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Choose a supported duration, activity, and difficulty." }, { status: 400 });
   }
 
+  if (process.env.OLLAMA_ENABLED === "false") {
+    return NextResponse.json({
+      quest: makeFallbackQuest(settings),
+      source: "fallback",
+      notice: "This hosted demo uses a ready-made quest. Run TouchGrass with Ollama on your device for open-weight AI generation.",
+    });
+  }
+
   try {
     const quest = await generateQuestWithOllama(settings, request.signal);
     return NextResponse.json({ quest, source: "ollama" });

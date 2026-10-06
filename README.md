@@ -40,3 +40,5 @@ Open [http://localhost:3000](http://localhost:3000). To check offline behavior l
 - Ollama with an open-weight local model
 
 See [the product requirements](docs/PRD%20(5).md) for the product scope and demo loop.
+
+For public hosting with Ollama's hosted API, see the [deployment guide](DEPLOYMENT.md). Local development can continue using the Ollama server on your device.

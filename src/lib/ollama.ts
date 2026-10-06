@@ -59,10 +59,14 @@ function promptFor(settings: QuestSettings): string {
 export async function generateQuestWithOllama(settings: QuestSettings, requestSignal?: AbortSignal): Promise<QuestDraft> {
   const baseUrl = (process.env.OLLAMA_BASE_URL ?? "http://127.0.0.1:11434").replace(/\/+$/, "");
   const model = process.env.OLLAMA_MODEL ?? "qwen2.5-coder:7b";
+  const apiKey = process.env.OLLAMA_API_KEY;
 
   const response = await fetch(`${baseUrl}/api/chat`, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: {
+      "content-type": "application/json",
+      ...(apiKey ? { authorization: `Bearer ${apiKey}` } : {}),
+    },
     cache: "no-store",
     signal: requestSignal
       ? AbortSignal.any([requestSignal, AbortSignal.timeout(120_000)])
