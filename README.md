@@ -4,22 +4,32 @@ TouchGrass is an offline-first outdoor quest companion. Prepare a short quest wi
 
 ## Current build phase
 
-**Phase 1 — foundation:** responsive Next.js app shell, installable PWA metadata, a small versioned service worker, and the initial IndexedDB schema. Quest generation and progress arrive in the next phases.
+**Phase 2 — quest generation:** choose a duration, activity, and difficulty; ask a local Ollama model for a structured quest; review the tasks; and save the prepared quest to IndexedDB. A safe on-device fallback is available if Ollama cannot generate a valid quest. Quest progress and the timer arrive in the next phase.
 
 ## Run locally
 
-```bash
-npm install
-npm run dev
-```
+1. Install and start [Ollama](https://ollama.com/download).
+2. Make sure the configured model is available. This workspace currently uses `qwen2.5-coder:7b`, which is already installed here. For a fresh setup:
 
-Open [http://localhost:3000](http://localhost:3000). The service worker is enabled in production builds; it is intentionally not registered in development so it cannot interfere with hot reload.
+   ```bash
+   ollama pull qwen2.5-coder:7b
+   ```
+
+3. Copy `.env.example` to `.env.local` if you want to change the model or Ollama address.
+4. Install dependencies and start the app:
+
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+Open [http://localhost:3000](http://localhost:3000). The app server must run on the same computer as Ollama for generation; quest data stays in the browser. The browser talks to the same-origin `/api/quests` route, which calls Ollama on `127.0.0.1:11434`, so browser CORS settings are not needed.
 
 ## Local data and offline behavior
 
-- Quest records, results, stats, and photo evidence are designed for IndexedDB through Dexie.
+- Prepared quests, results, stats, and photo evidence are stored in IndexedDB through Dexie.
 - The service worker caches the app shell, its built assets, and a small offline fallback. It does not store quest records or photos in Cache Storage.
-- The first full offline quest flow is still being built. Use a production build over HTTPS (or `localhost`) when trying PWA installation.
+- The prepared quest can be made without a model through the on-device fallback. The complete offline quest experience is still being built.
 - No account or cloud database is part of the MVP.
 
 ## Stack
@@ -27,6 +37,6 @@ Open [http://localhost:3000](http://localhost:3000). The service worker is enabl
 - Next.js App Router and React
 - TypeScript and Tailwind CSS
 - Dexie over IndexedDB
-- A local Ollama model for quest preparation (planned)
+- Ollama with an open-weight local model
 
 See [the product requirements](docs/PRD%20(5).md) for the product scope and demo loop.
