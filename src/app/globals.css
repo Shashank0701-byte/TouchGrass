@@ -402,6 +402,19 @@ h1 em { color: var(--forest); font-weight: 400; }
 .session-task[disabled] { cursor: default; }
 .session-task-done > span:nth-child(2) { color: #89877d; text-decoration: line-through; text-decoration-color: rgba(61, 95, 88, .55); }
 .session-check { color: var(--forest); font-size: 20px; text-align: center; }
+.evidence-tools { display: grid; gap: 7px; margin: 10px 0 13px 46px; }
+.evidence-capture { display: inline-flex; width: fit-content; align-items: center; padding: 9px 12px; border: 1px solid rgba(61, 95, 88, .5); color: var(--forest-deep); cursor: pointer; font-size: 10px; font-weight: 700; }
+.evidence-capture:hover { background: rgba(61, 95, 88, .06); }
+.evidence-capture:focus-within { outline: 3px solid var(--ochre); outline-offset: 2px; }
+.evidence-capture input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
+.evidence-capture-busy { cursor: wait; opacity: .7; }
+.evidence-preview { display: grid; width: fit-content; justify-items: start; gap: 7px; }
+.evidence-preview a { display: block; }
+.evidence-preview img { display: block; width: min(100%, 280px); max-height: 220px; border: 1px solid var(--line); object-fit: cover; }
+.evidence-delete { width: fit-content; padding: 4px 0; border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 9px; text-decoration: underline; text-underline-offset: 3px; }
+.evidence-delete:disabled { cursor: wait; opacity: .6; }
+.evidence-note { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
+.evidence-error { padding: 10px 12px; border-left: 2px solid #b35b43; background: rgba(179, 91, 67, .07); color: #7d3e30; font-size: 11px; line-height: 1.6; }
 .session-hint, .session-finish { margin-top: 20px; color: var(--muted); font-size: 12px; line-height: 1.7; }
 .session-finish { display: grid; gap: 7px; padding: 15px 18px; border-left: 2px solid var(--forest); background: rgba(61, 95, 88, .06); color: var(--forest); font-size: 10px; font-weight: 700; letter-spacing: .1em; }
 .session-finish strong { font: 400 25px Georgia, "Times New Roman", serif; letter-spacing: 0; }

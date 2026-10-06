@@ -4,7 +4,7 @@ TouchGrass is an offline-first outdoor quest companion. Prepare a short quest wi
 
 ## Current build phase
 
-**Phase 5 - gamification:** quests award 50/100/150 Grass XP for easy/medium/hard completion. A local daily streak tracks consecutive calendar days, while Home shows total XP, current and longest streak, outdoor time, and recent quest history. Rewards and history are stored in IndexedDB; earlier Phase 3 completions are awarded once when the app opens.
+**Phase 6 - photo evidence:** tasks marked as requiring a photo can open the device camera or photo picker. Images up to 12 MB are saved as blobs in IndexedDB, previewed in the quest, and removable at any time. A required-photo task cannot be checked off until its evidence is saved. Photos never enter Cache Storage or leave this device.
 
 ## Run locally
 

@@ -125,9 +125,12 @@ export function QuestShelf() {
                         {quest.status === "active" ? "Resume quest" : "Start quest"}
                       </button>
                     ) : (
-                      <p className="shelf-ready-note">
-                        Completed in {Math.floor((quest.durationSeconds ?? 0) / 60)} min. This quest is in your local history.
-                      </p>
+                      <div className="shelf-completed-actions">
+                        <p className="shelf-ready-note">
+                          Completed in {Math.floor((quest.durationSeconds ?? 0) / 60)} min. This quest is in your local history.
+                        </p>
+                        <button className="shelf-ready-button" onClick={() => setSessionId(quest.id)} type="button">View quest &amp; photos</button>
+                      </div>
                     )}
                   </div>
                 )}

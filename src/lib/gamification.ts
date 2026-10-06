@@ -45,9 +45,11 @@ const emptyStats = (): UserStats => ({
 });
 
 export async function toggleQuestTask(questId: string, taskId: string) {
-  await db.transaction("rw", db.quests, db.results, db.stats, async () => {
+  await db.transaction("rw", db.quests, db.results, db.stats, db.evidence, async () => {
     const quest = await db.quests.get(questId);
     if (!quest || quest.status !== "active") return;
+    const selectedTask = quest.tasks.find((task) => task.id === taskId);
+    if (!selectedTask || (selectedTask.requiresPhoto && (!selectedTask.evidenceId || !(await db.evidence.get(selectedTask.evidenceId))))) return;
     const tasks = quest.tasks.map((task) => task.id === taskId ? { ...task, completed: !task.completed } : task);
 
     if (!tasks.length || !tasks.every((task) => task.completed)) {
